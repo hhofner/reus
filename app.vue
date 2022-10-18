@@ -1,13 +1,14 @@
 <template>
-  <h1>Quick Input</h1>
+  <h1>Spent Today: <span :class="{ 'red-negative': spentToday > 0 }">{{ spentToday }}</span></h1>
   <form>
     <div class="dates">
-      <input type="date" v-model="inputDate"/>
+      <input type="date" :value="inputDate"/>
       <input type="time" v-model="inputTime"/>
     </div>
     <div class="priceDetails">
       <input class="price" type="text" inputmode="numeric" placeholder="Price in yen" pattern="[0-9]*"
              v-model="inputPrice"/>
+      <div class="select-container">
       <select>
         <option value="">Payment Type</option>
         <option value="cash">Cash</option>
@@ -24,10 +25,28 @@
         <option value="presents">Presents</option>
       </select>
     </div>
-    <textarea placeholder="remarks"/>
+    </div>
+    <textarea placeholder="Remarks"/>
     <button>Submit</button>
   </form>
 </template>
+
+<script setup>
+  import { ref } from "vue";
+
+  const spentToday = ref(100);
+  const inputDate = ref(null);
+  const inputTIme = ref(null);
+  const inputPrice = ref(null);
+  const inputType = ref(null);
+  const inputCategory = ref(null);
+  const inputRemarks = ref(null);
+
+  onMounted(() => {
+    inputDate.value = new Date()
+    console.log(inputDate)
+  })
+</script>
 
 <script>
 export default {
@@ -35,28 +54,22 @@ export default {
       {
         meta: {name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1"}
       }
-  ,
-  data() {
-    return {
-      inputDate: "",
-      inputTime: "",
-      inputPrice: "",
-      inputType: "",
-      inputCategory: "",
-      inputRemarks: "",
-    };
-  },
 };
 </script>
 
 <style>
 :root {
   box-sizing: border-box;
+  font-family: sans-serif;
   --small-spacing: 0.3rem;
   --medium-spacing: 0.6rem;
   --large-spacing: 1rem;
   --very-large-spacing: 2rem;
+}
 
+input {
+  width:  100%;
+  box-sizing: border-box;
 }
 
 html {
@@ -72,7 +85,7 @@ body {
 }
 
 form {
-  gap: var(--large-spacing);
+  gap: var(--very-large-spacing);
   display: flex;
   flex-direction: column;
 }
@@ -84,6 +97,15 @@ form {
   width: 100%;
   display: flex;
   gap: var(--small-spacing);
+}
+
+.select-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.red-negative {
+  color: red;
 }
 
 @media (max-width: 500px) {
